@@ -39,9 +39,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import pnb.orp.cache.ORPCache;
+import pnb.orp.guice.ORPModule;
 import pnb.orp.handlers.ChatHandler;
 import pnb.orp.proxy.CommonProxy;
-import png.orp.guice.ORPModule;
 
 @Mod(
 	modid = "orpcore",

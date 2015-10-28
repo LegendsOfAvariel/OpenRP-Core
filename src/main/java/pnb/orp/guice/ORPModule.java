@@ -1,4 +1,4 @@
-package png.orp.guice;
+package pnb.orp.guice;
 
 import com.google.inject.AbstractModule;
 
