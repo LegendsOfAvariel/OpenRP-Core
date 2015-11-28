@@ -1,22 +1,16 @@
 package pnb.orp.handlers;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import pnb.orp.cache.ORPCache;
+import pnb.orp.proxy.CommonProxy;
 
 
 public class ChatHandler {
 	
-	private final Injector injector;
-	private final ORPCache cache;
+	private final CommonProxy proxy;
 	
-	@Inject
-	private ChatHandler(Injector injector, ORPCache cache) {
-		this.injector = injector;
-		this.cache = cache;
+	public ChatHandler(CommonProxy proxy) {
+		this.proxy = proxy;
 	}
 	
 	@SubscribeEvent

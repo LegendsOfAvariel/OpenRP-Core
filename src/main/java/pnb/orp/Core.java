@@ -38,7 +38,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
-import pnb.orp.cache.ORPCache;
 import pnb.orp.guice.ORPModule;
 import pnb.orp.handlers.ChatHandler;
 import pnb.orp.proxy.CommonProxy;
@@ -69,7 +68,7 @@ public class Core {
 		//Initialize Dependency Injector
 		injector = Guice.createInjector(new ORPModule());
 		//proxy.setInjector(i);
-		event.getSuggestedConfigurationFile().getAbsolutePath();
+		proxy.init(event.getSuggestedConfigurationFile().getAbsolutePath(), injector);
 	}
 	
 	/**
@@ -79,8 +78,9 @@ public class Core {
 	 */
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		
 		//Register the chat handler, which has been instantiated by Guice
-		MinecraftForge.EVENT_BUS.register(injector.getInstance(ChatHandler.class));
+		MinecraftForge.EVENT_BUS.register(new ChatHandler(proxy));
 	}
 	
 	@EventHandler
@@ -90,6 +90,6 @@ public class Core {
 	
 	@EventHandler
 	public void serverStopping(FMLServerStoppingEvent event) {
-		injector.getInstance(ORPCache.class).shutdownCache();
+		proxy.shutdownDB();
 	}
 }
