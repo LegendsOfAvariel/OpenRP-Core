@@ -1,29 +1,33 @@
+/*
+// For those who want the bleeding edge
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
     }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
+*/
 
-apply plugin: 'forge'
+// for people who want stable
+plugins {
+    id "scala"
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
+}
 
 version = "0.1"
 group= "pnb.openrp.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "OpenRP-Core"
+archivesBaseName = "core"
 
 minecraft {
-    version = "1.8-11.14.3.1450"
-    runDir = "eclipse"
+    version = "1.8-11.14.4.1563"
+    runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
@@ -31,6 +35,12 @@ minecraft {
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
     mappings = "snapshot_20141130"
+}
+
+repositories {
+	flatDir {
+		dirs 'libs'
+	}
 }
 
 dependencies {
@@ -47,13 +57,10 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 	
-	repositories {
-		flatDir {
-			dirs 'libs'
-		}
-	}
-	
-	compile name: 'PNBUtils-0.1'
+    compile 'com.google.inject:guice:4.+'
+    compile 'com.google.inject.extensions:guice-assistedinject:4.+'
+    compile 'com.h2database:h2:1.4.+'
+    compile name: 'PNBUtils-0.1'
 }
 
 processResources

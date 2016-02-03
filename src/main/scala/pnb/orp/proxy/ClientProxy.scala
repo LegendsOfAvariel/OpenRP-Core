@@ -21,10 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pnb.orp.proxy;
+package pnb.orp.proxy
 
-public class CommonProxy {
-	public void setRenders(){	
-		//This should remain empty
-	}
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
+
+import pnb.orp.characters.Character;
+
+class ClientProxy extends CommonProxy {
+  
+  override def init(configDirectory: String) = {}
+  
+  override def loadCharacter(uuid: UUID, cardName: String ):Character = {
+    //TODO Implement asking the server for the character.
+    null
+  }
 }
