@@ -47,3 +47,7 @@ Thumbs.db
 **/.metadata/
 **/.recommenders/
 **/build/
+**/run/
+**/.cache-main
+OpenRP-Core_Client.launch
+OpenRP-Core_Server.launch
