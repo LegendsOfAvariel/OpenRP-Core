@@ -32,10 +32,5 @@ import pnb.orp.characters.Character;
 
 class ClientProxy extends CommonProxy {
   
-  override def init(configDirectory: String) = {}
-  
-  override def loadCharacter(uuid: UUID, cardName: String ):Character = {
-    //TODO Implement asking the server for the character.
-    null
-  }
+
 }

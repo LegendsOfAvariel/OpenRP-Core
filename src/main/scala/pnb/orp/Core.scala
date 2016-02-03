@@ -35,19 +35,19 @@ import net.minecraftforge.fml.common.event.
   {FMLInitializationEvent, FMLPostInitializationEvent, 
   FMLPreInitializationEvent, FMLServerStoppingEvent}
 
-import pnb.orp.handlers.ChatHandler
 import pnb.orp.proxy.CommonProxy
 
 @Mod(
 	modid = "orpcore",
 	name = "OpenRP Core",
-	version = "0.1.0a"
+	version = "0.1.0a",
+	modLanguage = "scala"
 )
 object Core {
   
   @SidedProxy (
 		clientSide = "pnb.orp.proxy.ClientProxy",
-		serverSide = "pnb.orp.proxy.CommonProxy"
+		serverSide = "pnb.orp.proxy.ServerProxy"
 	)
 	var proxy: CommonProxy = null
 	
@@ -59,7 +59,7 @@ object Core {
 	 */
 	@EventHandler
   def preInit(e: FMLPreInitializationEvent) = {
-		proxy.init(e.getSuggestedConfigurationFile.getAbsolutePath)
+		proxy.preInit(e)
 	}
 
   /**
@@ -69,8 +69,7 @@ object Core {
 	 */
 	@EventHandler
   def init(e: FMLInitializationEvent) = {
-	  //Register the chat handler, which has been instantiated by Guice
-		MinecraftForge.EVENT_BUS.register(new ChatHandler(proxy))
+		proxy.init(e)
   }
 
   @EventHandler
@@ -79,6 +78,6 @@ object Core {
   
   @EventHandler
 	def serverStopping(e: FMLServerStoppingEvent) = {
-		proxy.shutdownDB
+		proxy.serverStopping(e)
 	}
 }

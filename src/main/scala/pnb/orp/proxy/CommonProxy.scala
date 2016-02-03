@@ -28,101 +28,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import net.minecraftforge.fml.common.event.
+  {FMLInitializationEvent, FMLPostInitializationEvent, 
+  FMLPreInitializationEvent, FMLServerStoppingEvent}
+
 import pnb.orp.characters.Character;
 
 class CommonProxy {
   
-  private var dbConnection: Connection = null
-	private var configDirectory: String = null
+  protected var configDirectory: String = null
   
-	def init(configDirectory: String) = {
-		this.configDirectory = configDirectory
-		//TODO Initialize DB Connection
-		this.dbConnection = null
+  def preInit(e: FMLPreInitializationEvent) = {
+    configDirectory = e.getSuggestedConfigurationFile.getAbsolutePath
   }
   
-  /**
-   * Loads a requested character from the database, given the character name and player uuid.
-   * @param uuid The player UUID
-   * @param name Character's Name (should be card name)
-   * @return The character object.
-   */
-	def loadCharacter(uuid: UUID, cardName: String ):Character = {
-		//Get th
-		val sql: String = if (cardName==null) "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND active=true" 
-		  else "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND cardName='" + cardName + "'"
-		
-		var character: Character = null
-		//Try to load the character
-  	try {
-  		//Run the query
-		  val result = this.dbConnection.createStatement.executeQuery(sql)
-			
-		  //Set the pointer to the first result
-		  result.first
-			
-		  //Load the character
-		  character = new Character (this.dbConnection, 
-	      result.getObject("uuid").asInstanceOf[UUID], 
-	      result.getString("cardName"),
-			  name = result.getString("name"),
-			  age = result.getInt("age"),
-			  race = result.getString("race"),
-			  subrace = result.getString("subrace"),
-			  bio = result.getString("bio"),
-			  active = result.getBoolean("active"))
-			
-	  } catch {
-		  // TODO Auto-generated catch block
-	    case e: SQLException => e.printStackTrace
-		}
-	  character
-	}
-	
-	/**
-	 * Loads a character from the database and makes them active.
-	 * @param uuid UUID of the player
-	 * @param cardName the name of the character card
-	 * @return the character card
-	 */
-	def loadCharacterAndMakeActive(uuid: UUID, cardName: String):Character = {
-		
-		var character: Character = null
-		
-		//Try to load the character and make them active
-    try {
-			//this.dbConnection.setAutoCommit(true);
-			this.dbConnection.createStatement.executeQuery("UPDATE Characters SET active=false WHERE UUID='" + uuid.toString + "' AND active=true")
-			
-			val result = this.dbConnection.createStatement.executeQuery("SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND cardName='" + cardName + "'")
-			
-			result.first
-			
-			//Initialize our Character
-			val character = new Character(dbConnection, 
-			    result.getObject("uuid").asInstanceOf[UUID], 
-			    result.getString("cardName"), 
-			    name = result.getString("name"), 
-			    age = result.getInt("age"), 
-			    race = result.getString("race"), 
-			    subrace = result.getString("subrace"), 
-			    bio = result.getString("bio"), 
-			    active = true)
-			
-		} catch {
-			// TODO Auto-generated catch block
-		  case e: SQLException => e.printStackTrace
-		}
-    character
-	}
-
-	def shutdownDB = {
-		try {
-			this.dbConnection.close
-		} catch {
-			// TODO Auto-generated catch block
-			case e: SQLException => e.printStackTrace
-		}
-	}
+  def init(e: FMLInitializationEvent) = {}
+  
+  def postInit(e: FMLPostInitializationEvent) = {}
+  
+  def serverStopping(e: FMLServerStoppingEvent) = {}
+  
+  def loadCharacter(uuid: UUID, cardName: String ):Character = {null}
+  
+  def loadCharacterAndMakeActive(uuid: UUID, cardName: String):Character = {null}
+  
+  def saveCharacter(c: Character) = {}
   
 }
