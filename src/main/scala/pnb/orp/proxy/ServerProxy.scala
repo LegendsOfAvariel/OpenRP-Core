@@ -17,11 +17,11 @@ class ServerProxy extends CommonProxy {
   
   private var dbConnection: Connection = null
   
-	override def preInit(e: FMLPreInitializationEvent) = {
+  override def preInit(e: FMLPreInitializationEvent) = {
     super.preInit(e)
     
-		//TODO Initialize DB Connection
-		this.dbConnection = null
+    //TODO Initialize DB Connection
+    this.dbConnection = null
   }
   
   override def init(e: FMLInitializationEvent) = {
@@ -30,16 +30,16 @@ class ServerProxy extends CommonProxy {
     MinecraftForge.EVENT_BUS.register(new ChatHandler(this))
   }
   
-	override def serverStopping(e: FMLServerStoppingEvent) = {
-	  super.serverStopping(e)
+  override def serverStopping(e: FMLServerStoppingEvent) = {
+    super.serverStopping(e)
 	  
-		try {
-			this.dbConnection.close
-		} catch {
-			// TODO Auto-generated catch block
-			case e: SQLException => e.printStackTrace
-		}
-	}
+    try {
+      this.dbConnection.close
+    } catch {
+      // TODO Auto-generated catch block
+      case e: SQLException => e.printStackTrace
+    }
+  }
   
   /**
    * Loads a requested character from the database, given the character name and player uuid.
@@ -47,38 +47,38 @@ class ServerProxy extends CommonProxy {
    * @param name Character's Name (should be card name)
    * @return The character object.
    */
-	override def loadCharacter(uuid: UUID, cardName: String ):Character = {
+  override def loadCharacter(uuid: UUID, cardName: String ):Character = {
 	  
-		//Get the requested character. Get the active if not given a card name.
-		val sql: String = if (cardName==null) "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND active=true" 
-		  else "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND cardName='" + cardName + "'"
+    //Get the requested character. Get the active if not given a card name.
+    val sql: String = if (cardName==null) "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND active=true" 
+      else "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND cardName='" + cardName + "'"
 		
-		var character: Character = null
-		//Try to load the character
-  	try {
-  		//Run the query
-		  val result = this.dbConnection.createStatement.executeQuery(sql)
+    var character: Character = null
+    //Try to load the character
+    try {
+      //Run the query
+      val result = this.dbConnection.createStatement.executeQuery(sql)
 			
-		  //Set the pointer to the first result
-		  result.first
+      //Set the pointer to the first result
+      result.first
 			
-		  //Load the character
-		  character = new Character (this, 
-	      result.getObject("uuid").asInstanceOf[UUID], 
-	      result.getString("cardName"),
-			  name = result.getString("name"),
-			  age = result.getInt("age"),
-			  race = result.getString("race"),
-			  subrace = result.getString("subrace"),
-			  bio = result.getString("bio"),
-			  active = result.getBoolean("active"))
+      //Load the character
+      character = new Character (this, 
+        result.getObject("uuid").asInstanceOf[UUID], 
+        result.getString("cardName"),
+        name = result.getString("name"),
+        age = result.getInt("age"),
+        race = result.getString("race"),
+        subrace = result.getString("subrace"),
+        bio = result.getString("bio"),
+        active = result.getBoolean("active"))
 			
-	  } catch {
-		  // TODO Auto-generated catch block
-	    case e: SQLException => e.printStackTrace
-		}
-	  character
-	}
+    } catch {
+      // TODO Auto-generated catch block
+      case e: SQLException => e.printStackTrace
+    }
+    character
+  }
 	
 	/**
 	 * Loads a character from the database and makes them active.
@@ -86,40 +86,40 @@ class ServerProxy extends CommonProxy {
 	 * @param cardName the name of the character card
 	 * @return the character card
 	 */
-	override def loadCharacterAndMakeActive(uuid: UUID, cardName: String):Character = {
+  override def loadCharacterAndMakeActive(uuid: UUID, cardName: String):Character = {
 	  
-		var character: Character = null
+    var character: Character = null
 		
-		//Try to load the character and make them active
+    //Try to load the character and make them active
     try {
-			//this.dbConnection.setAutoCommit(true);
-			this.dbConnection.createStatement.executeQuery("UPDATE Characters SET active=false WHERE UUID='" + uuid.toString + "' AND active=true")
+      //this.dbConnection.setAutoCommit(true)
+      this.dbConnection.createStatement.executeQuery("UPDATE Characters SET active=false WHERE UUID='" + uuid.toString + "' AND active=true")
 			
-			val result = this.dbConnection.createStatement.executeQuery("SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND cardName='" + cardName + "'")
+      val result = this.dbConnection.createStatement.executeQuery("SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND cardName='" + cardName + "'")
 			
-			result.first
+      result.first
 			
-			//Initialize our Character
-			val character = new Character(this, 
-			    result.getObject("uuid").asInstanceOf[UUID], 
-			    result.getString("cardName"), 
-			    name = result.getString("name"), 
-			    age = result.getInt("age"), 
-			    race = result.getString("race"), 
-			    subrace = result.getString("subrace"), 
-			    bio = result.getString("bio"), 
-			    active = true)
+      //Initialize our Character
+      val character = new Character(this, 
+        result.getObject("uuid").asInstanceOf[UUID], 
+        result.getString("cardName"), 
+        name = result.getString("name"), 
+        age = result.getInt("age"), 
+        race = result.getString("race"), 
+        subrace = result.getString("subrace"), 
+        bio = result.getString("bio"), 
+        active = true)
 			
-		} catch {
-			// TODO Auto-generated catch block
-		  case e: SQLException => e.printStackTrace
-		}
+    } catch {
+      // TODO Auto-generated catch block
+      case e: SQLException => e.printStackTrace
+    }
     character
-	}
+  }
 
 	override def saveCharacter(c: Character) = {
 	  
-	  val sql = "MERGE INTO Characters (uuid, cardName, name, age, race, subrace, bio, active)" +
+    val sql = "MERGE INTO Characters (uuid, cardName, name, age, race, subrace, bio, active)" +
       " KEY (uuid, cardName) VALUES ('" + c.uuid + "', '" + c.cardName + "', '" + c.name + "', " + c.age +
       ", '" + c.race + "', '" + c.subrace + "', '" + c.bio + "', " + c.active + " )"
     
