@@ -59,6 +59,7 @@ object Core {
 	 */
 	@EventHandler
   def preInit(e: FMLPreInitializationEvent) = {
+    //Proxy handles events. Some things should only be done client or server side.
 		proxy.preInit(e)
 	}
 
@@ -74,6 +75,7 @@ object Core {
 
   @EventHandler
   def postInit(e: FMLPostInitializationEvent) = {
+    proxy.postInit(e)
   }
   
   @EventHandler

@@ -34,8 +34,12 @@ import net.minecraftforge.fml.common.event.
 
 import pnb.orp.characters.Character;
 
+/**
+ * Things common to both the client and server side get done here.
+ */
 class CommonProxy {
   
+  //We want the config directory for both client and server side.
   protected var configDirectory: String = null
   
   def preInit(e: FMLPreInitializationEvent) = {
@@ -48,7 +52,11 @@ class CommonProxy {
   
   def serverStopping(e: FMLServerStoppingEvent) = {}
   
-  def loadCharacter(uuid: UUID, cardName: String ):Character = {null}
+  //A bunch of these differ between client and server,
+  //where the server has to load the character, while 
+  //the client requests it from the server.
+  
+  def loadCharacter(uuid: UUID, cardName: String = null ):Character = {null}
   
   def loadCharacterAndMakeActive(uuid: UUID, cardName: String):Character = {null}
   
