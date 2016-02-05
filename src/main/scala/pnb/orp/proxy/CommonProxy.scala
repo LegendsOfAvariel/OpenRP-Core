@@ -23,11 +23,12 @@
  */
 package pnb.orp.proxy
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.UUID;
+import java.sql.Connection
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.util.UUID
 
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.fml.common.event.
   {FMLInitializationEvent, FMLPostInitializationEvent, 
   FMLPreInitializationEvent, FMLServerStoppingEvent}
@@ -62,4 +63,5 @@ class CommonProxy {
   
   def saveCharacter(c: Character) = {}
   
+  def getChatChannel(character: Character):String = {null}
 }

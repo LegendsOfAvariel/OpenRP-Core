@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.event.
   {FMLInitializationEvent, FMLPostInitializationEvent, 
@@ -80,7 +81,7 @@ class ServerProxy extends CommonProxy {
     character
   }
 	
-	/**
+  /**
 	 * Loads a character from the database and makes them active.
 	 * @param uuid UUID of the player
 	 * @param cardName the name of the character card
@@ -135,5 +136,21 @@ class ServerProxy extends CommonProxy {
     						"UPDATE Characters SET name='" + this.name + "', age=" + this.age + ", race='" + this.race + 
     						"', subrace='" + this.subrace + "', bio='" + this.bio + "', active=" + this.active + 
     						"WHERE uuid='" + this.uuid.toString() + "' AND cardName='" + this.cardName + "'";*/
+	}
+	
+	override def getChatChannel(character: Character):String = {
+	  val sql = "SELECT channel FROM CharacterChat WHERE uuid='" + character.uuid.toString() + "' AND cardName='" + character.cardName + "'"
+	  
+	  var channel = "t"
+	  
+	  try {
+      val result = this.dbConnection.createStatement.executeQuery(sql)
+      result.first
+      channel = result.getString("channel")
+    } catch {
+      case e: SQLException => e.printStackTrace
+    }
+	  
+	  channel
 	}
 }
