@@ -26,8 +26,8 @@ class ChatHandler(protected val proxy: CommonProxy) {
       //Send the message on that channel.
       channel match {
         case "t" => sendInTalk(e)//send message on talk channel
-        case "s" => //send message on shout channel
-        case "w" => //send message on whisper channel
+        case "s" => sendInShout(e)//send message on shout channel
+        case "w" => sendInWhisper(e)//send message on whisper channel
         case "o" => //send message on ooc channel
         case "l" => //send message on looc channel
         case "h" => //send message on help channel
@@ -39,8 +39,22 @@ class ChatHandler(protected val proxy: CommonProxy) {
   
   def sendInTalk(e: ServerChatEvent) = {
     sendRangedMessageFromPlayer(e, 24, 
-        new ChatStyle(List(EnumChatFormatting.RED, EnumChatFormatting.ITALIC), 
+        new ChatStyle(List(EnumChatFormatting.GREEN, EnumChatFormatting.ITALIC), 
         separator = " ",
+        quote = List(EnumChatFormatting.WHITE)))
+  }
+  
+  def sendInShout(e: ServerChatEvent) = {
+    sendRangedMessageFromPlayer(e, 48,
+        new ChatStyle(List(EnumChatFormatting.RED, EnumChatFormatting.ITALIC), 
+        separator = " shouts ",
+        quote = List(EnumChatFormatting.WHITE)))
+  }
+  
+  def sendInWhisper(e: ServerChatEvent) = { 
+    sendRangedMessageFromPlayer(e, 6,
+        new ChatStyle(List(EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC), 
+        separator = " whispers ",
         quote = List(EnumChatFormatting.WHITE)))
   }
   

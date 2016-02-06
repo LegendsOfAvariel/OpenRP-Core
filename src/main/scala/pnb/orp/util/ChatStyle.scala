@@ -25,17 +25,21 @@ class ChatStyle(message: List[EnumChatFormatting],
     }
     
     //Style the message proper
-    var inQuote = false
-    message.foreach { x => 
-      if (x == '"' || x == '\'' ) {
-        if (inQuote)
-          output += x.toString + EnumChatFormatting.RESET.toString + messageStyle
-        else 
-          output += EnumChatFormatting.RESET.toString + quoteStyle + x.toString
-      }
-      else
-        output += x.toString
-    } 
+    if (quoteStyle != null ) {
+      var inQuote = false
+      message.foreach { x => 
+        if (x == '"' || x == '\'' ) {
+          if (inQuote)
+            output += x.toString + EnumChatFormatting.RESET.toString + messageStyle
+          else 
+            output += EnumChatFormatting.RESET.toString + quoteStyle + x.toString
+        }
+        else
+          output += x.toString
+      } 
+    }
+    else
+      output += message
     
     output
   }
