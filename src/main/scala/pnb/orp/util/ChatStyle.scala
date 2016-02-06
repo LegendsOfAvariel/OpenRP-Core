@@ -12,16 +12,16 @@ class ChatStyle(message: List[EnumChatFormatting],
   protected val nameStyle: String = if (name != null) name.mkString else null
   
   def apply(name: String, message: String):String = {
-    var output = ""
+    var output = new StringBuilder(name.length + separator.length + message.length + 20)
     
     //Style the name and separator
     if ( nameStyle != null ) {
       //Style the name and separator with the name style
-      output += nameStyle + name + separator + EnumChatFormatting.RESET.toString + messageStyle
+      output.append(nameStyle + name + separator + EnumChatFormatting.RESET.toString + messageStyle)
     }
     else {
       //Style the name and separator with the message style
-      output += messageStyle + name + separator
+      output.append(messageStyle + name + separator)
     }
     
     //Style the message proper
@@ -30,17 +30,17 @@ class ChatStyle(message: List[EnumChatFormatting],
       message.foreach { x => 
         if (x == '"' || x == '\'' ) {
           if (inQuote)
-            output += x.toString + EnumChatFormatting.RESET.toString + messageStyle
+            output.append(x.toString + EnumChatFormatting.RESET.toString + messageStyle)
           else 
-            output += EnumChatFormatting.RESET.toString + quoteStyle + x.toString
+            output.append(EnumChatFormatting.RESET.toString + quoteStyle + x.toString)
         }
         else
-          output += x.toString
+          output.append(x.toString)
       } 
     }
     else
-      output += message
+      output.append(message)
     
-    output
+    output.toString
   }
 }
