@@ -25,15 +25,21 @@ class ChatStyle(message: List[EnumChatFormatting],
     }
     
     //Style the message proper
+    //If there is a quote style to apply
     if (quoteStyle != null ) {
       var inQuote = false
+      //Loop through the message
       message.foreach { x => 
-        if (x == '"' || x == '\'' ) {
+        //If we've found a quote mark
+        if (x == '"' ) {
+          //If we're within a quote, end the quote formatting
           if (inQuote)
             output.append(x.toString + EnumChatFormatting.RESET.toString + messageStyle)
+          //Else apply the quote formatting
           else 
             output.append(EnumChatFormatting.RESET.toString + quoteStyle + x.toString)
         }
+        //Otherwise just append the message
         else
           output.append(x.toString)
       } 
