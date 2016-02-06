@@ -37,12 +37,6 @@ minecraft {
     mappings = "snapshot_20141130"
 }
 
-repositories {
-	flatDir {
-		dirs 'libs'
-	}
-}
-
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -57,7 +51,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    compile name: 'PNBUtils-0.1'
+    compile 'com.h2database:h2:1.4.191'
+    compile 'org.iq80.snappy:snappy:0.4'
 }
 
 processResources
