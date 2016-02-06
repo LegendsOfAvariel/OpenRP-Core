@@ -8,6 +8,8 @@ import net.minecraftforge.event.ServerChatEvent
 import net.minecraftforge.fml.common.Mod.EventHandler
 import pnb.orp.proxy.CommonProxy
 import net.minecraft.entity.player.EntityPlayerMP
+import pnb.orp.util.ChatStyle
+import net.minecraft.util.EnumChatFormatting
 
 class ChatHandler(protected val proxy: CommonProxy) {
   
@@ -36,15 +38,18 @@ class ChatHandler(protected val proxy: CommonProxy) {
 	}
   
   def sendInTalk(e: ServerChatEvent) = {
-    sendRangedMessageFromPlayer(e, 24) //Change to send a font styling as well.
+    sendRangedMessageFromPlayer(e, 24, 
+        new ChatStyle(List(EnumChatFormatting.RED, EnumChatFormatting.ITALIC), 
+        separator = " ",
+        quote = List(EnumChatFormatting.WHITE)))
   }
   
-  def sendRangedMessageFromPlayer(e: ServerChatEvent, range:Int) = {
+  def sendRangedMessageFromPlayer(e: ServerChatEvent, range:Int, style: ChatStyle) = {
     //Get player's position and load their active character
     val playerPos = e.player.getPosition
     val character = proxy.loadCharacter(e.player.getUniqueID)
     //Style message
-    val message = character.name + ": " + e.message
+    val message = style.apply(character.name, e.message)
     //Find all players within talk range
     val playersInRange = e.player.getServerForPlayer.getEntitiesWithinAABB(classOf[EntityPlayerMP], 
       AxisAlignedBB.fromBounds(
