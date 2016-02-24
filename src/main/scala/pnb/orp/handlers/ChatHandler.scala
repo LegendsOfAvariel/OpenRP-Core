@@ -16,20 +16,37 @@ class ChatHandler(protected val proxy: CommonProxy) {
   @EventHandler
   def onServerChatEvent(e: ServerChatEvent) = {
     //Check if the event is a message being sent
-    if ( e.message != null ) {
+    val message = Option(e.message) //Wrap the possible java null in an Option
+    if ( message != None ) {
       //Stop the event
       e.setCanceled(true)
   		//Get the player who sent the message.
       //Get the active character. 
       //Look up current channel the active character is in
       val channel = proxy.getChatChannel(proxy.loadCharacter(e.player.getUniqueID))
+      val character = proxy.loadCharacter(e.player.getUniqueID)
       //Send the message on that channel.
       channel match {
-        case "t" => sendInTalk(e)//send message on talk channel
-        case "s" => sendInShout(e)//send message on shout channel
-        case "w" => sendInWhisper(e)//send message on whisper channel
+        case "t" => sendRangedMessageFromPlayer(e, 24, 
+                      new ChatStyle(List(EnumChatFormatting.GREEN, EnumChatFormatting.ITALIC), 
+                      character.name,
+                      separator = " ",
+                      quote = Some(List(EnumChatFormatting.WHITE))))//send message on talk channel
+        case "s" => sendRangedMessageFromPlayer(e, 48,
+                      new ChatStyle(List(EnumChatFormatting.RED, EnumChatFormatting.ITALIC), 
+                      character.name,
+                      separator = " shouts ",
+                      quote = Some(List(EnumChatFormatting.WHITE))))//send message on shout channel
+        case "w" => sendRangedMessageFromPlayer(e, 6,
+                      new ChatStyle(List(EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC), 
+                      character.name,
+                      separator = " whispers ",
+                      quote = Some(List(EnumChatFormatting.WHITE))))//send message on whisper channel
         case "o" => //send message on ooc channel
-        case "l" => //send message on looc channel
+        case "l" => sendRangedMessageFromPlayer(e, 6,
+                      new ChatStyle(List(EnumChatFormatting.GRAY), 
+                      e.player.getName,
+                      separator = ": "))//send message on looc channel
         case "h" => //send message on help channel
         case "g" => //send message on gm channel
         case "e" => //send message on event channel
@@ -37,33 +54,11 @@ class ChatHandler(protected val proxy: CommonProxy) {
     }
 	}
   
-  def sendInTalk(e: ServerChatEvent) = {
-    sendRangedMessageFromPlayer(e, 24, 
-        new ChatStyle(List(EnumChatFormatting.GREEN, EnumChatFormatting.ITALIC), 
-        separator = " ",
-        quote = List(EnumChatFormatting.WHITE)))
-  }
-  
-  def sendInShout(e: ServerChatEvent) = {
-    sendRangedMessageFromPlayer(e, 48,
-        new ChatStyle(List(EnumChatFormatting.RED, EnumChatFormatting.ITALIC), 
-        separator = " shouts ",
-        quote = List(EnumChatFormatting.WHITE)))
-  }
-  
-  def sendInWhisper(e: ServerChatEvent) = { 
-    sendRangedMessageFromPlayer(e, 6,
-        new ChatStyle(List(EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC), 
-        separator = " whispers ",
-        quote = List(EnumChatFormatting.WHITE)))
-  }
-  
-  def sendRangedMessageFromPlayer(e: ServerChatEvent, range:Int, style: ChatStyle) = {
+  private def sendRangedMessageFromPlayer(e: ServerChatEvent, range:Int, style: ChatStyle) = {
     //Get player's position and load their active character
     val playerPos = e.player.getPosition
-    val character = proxy.loadCharacter(e.player.getUniqueID)
     //Style message
-    val message = style.apply(character.name, e.message)
+    val message = style.apply(e.message)
     //Find all players within talk range
     val playersInRange = e.player.getServerForPlayer.getEntitiesWithinAABB(classOf[EntityPlayerMP], 
       AxisAlignedBB.fromBounds(

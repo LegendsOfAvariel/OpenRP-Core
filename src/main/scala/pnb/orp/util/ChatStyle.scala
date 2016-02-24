@@ -2,51 +2,57 @@ package pnb.orp.util
 
 import net.minecraft.util.EnumChatFormatting
 
-class ChatStyle(message: List[EnumChatFormatting], 
-    quote: List[EnumChatFormatting] = null, 
+class ChatStyle(protected val message: List[EnumChatFormatting],
+    protected val senderName: String,
+    protected val quote: Option[List[EnumChatFormatting]] = None, 
     protected val separator: String = ": " , 
-    name: List[EnumChatFormatting] = null) {
+    protected val name: Option[List[EnumChatFormatting]] = None,
+    protected val prefix: String = "",
+    protected val suffix: String = ""
+    ) {
   
-  protected val messageStyle: String = if (message != null) message.mkString else null
-  protected val quoteStyle: String = if (quote != null) quote.mkString else null
-  protected val nameStyle: String = if (name != null) name.mkString else null
+  protected val messageStyle: String = message.mkString
+  protected val quoteStyle: String = quote.getOrElse(List("")).mkString
+  protected val nameStyle: String = name.getOrElse(List("")).mkString
   
-  def apply(name: String, message: String):String = {
-    var output = new StringBuilder(name.length + separator.length + message.length + 20)
+  def apply(message: String):String = {
+    var output = new StringBuilder(senderName.length + separator.length + message.length + 20)
+    
+    //Remove prefix and suffix from the message if they are in there
     
     //Style the name and separator
-    if ( nameStyle != null ) {
+    if ( nameStyle != "" ) {
       //Style the name and separator with the name style
-      output.append(nameStyle + name + separator + EnumChatFormatting.RESET.toString + messageStyle)
+      output.append(nameStyle + senderName + separator + EnumChatFormatting.RESET.toString + messageStyle + prefix)
     }
     else {
       //Style the name and separator with the message style
-      output.append(messageStyle + name + separator)
+      output.append(messageStyle + senderName + separator + prefix)
     }
     
     //Style the message proper
     //If there is a quote style to apply
-    if (quoteStyle != null ) {
+    if (quoteStyle != "" ) {
       var inQuote = false
       //Loop through the message
-      message.foreach { x => 
+      message.foreach { char => 
         //If we've found a quote mark
-        if (x == '"' ) {
+        if (char == '"' ) {
           //If we're within a quote, end the quote formatting
           if (inQuote)
-            output.append(x.toString + EnumChatFormatting.RESET.toString + messageStyle)
+            output.append(char.toString + EnumChatFormatting.RESET.toString + messageStyle)
           //Else apply the quote formatting
           else 
-            output.append(EnumChatFormatting.RESET.toString + quoteStyle + x.toString)
+            output.append(EnumChatFormatting.RESET.toString + quoteStyle + char.toString)
         }
         //Otherwise just append the message
         else
-          output.append(x.toString)
-      } 
+          output.append(char.toString)
+      }
     }
     else
       output.append(message)
     
-    output.toString
+    output.toString + suffix
   }
 }

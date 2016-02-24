@@ -48,11 +48,11 @@ class ServerProxy extends CommonProxy {
    * @param name Character's Name (should be card name)
    * @return The character object.
    */
-  override def loadCharacter(uuid: UUID, cardName: String ):Character = {
+  override def loadCharacter(uuid: UUID, name: String ):Character = {
 	  
     //Get the requested character. Get the active if not given a card name.
-    val sql: String = if (cardName==null) "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND active=true" 
-      else "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND cardName='" + cardName + "'"
+    val sql: String = if (name==null) "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND active=true" 
+      else "SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND name='" + name + "'"
 		
     var character: Character = null
     //Try to load the character
@@ -66,8 +66,7 @@ class ServerProxy extends CommonProxy {
       //Load the character
       character = new Character (this, 
         result.getObject("uuid").asInstanceOf[UUID], 
-        result.getString("cardName"),
-        name = result.getString("name"),
+        result.getString("name"),
         age = result.getInt("age"),
         race = result.getString("race"),
         subrace = result.getString("subrace"),
@@ -87,7 +86,7 @@ class ServerProxy extends CommonProxy {
 	 * @param cardName the name of the character card
 	 * @return the character card
 	 */
-  override def loadCharacterAndMakeActive(uuid: UUID, cardName: String):Character = {
+  override def loadCharacterAndMakeActive(uuid: UUID, name: String):Character = {
 	  
     var character: Character = null
 		
@@ -96,15 +95,14 @@ class ServerProxy extends CommonProxy {
       //this.dbConnection.setAutoCommit(true)
       this.dbConnection.createStatement.executeQuery("UPDATE Characters SET active=false WHERE UUID='" + uuid.toString + "' AND active=true")
 			
-      val result = this.dbConnection.createStatement.executeQuery("SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND cardName='" + cardName + "'")
+      val result = this.dbConnection.createStatement.executeQuery("SELECT * FROM Characters WHERE UUID='" + uuid.toString + "' AND name='" + name + "'")
 			
       result.first
 			
       //Initialize our Character
       val character = new Character(this, 
         result.getObject("uuid").asInstanceOf[UUID], 
-        result.getString("cardName"), 
-        name = result.getString("name"), 
+        result.getString("name"), 
         age = result.getInt("age"), 
         race = result.getString("race"), 
         subrace = result.getString("subrace"), 
@@ -120,8 +118,8 @@ class ServerProxy extends CommonProxy {
 
 	override def saveCharacter(c: Character) = {
 	  
-    val sql = "MERGE INTO Characters (uuid, cardName, name, age, race, subrace, bio, active)" +
-      " KEY (uuid, cardName) VALUES ('" + c.uuid + "', '" + c.cardName + "', '" + c.name + "', " + c.age +
+    val sql = "MERGE INTO Characters (uuid, name, age, race, subrace, bio, active)" +
+      " KEY (uuid, name) VALUES ('" + c.uuid + "', '" + c.name + "', " + c.age +
       ", '" + c.race + "', '" + c.subrace + "', '" + c.bio + "', " + c.active + " )"
     
     try {
@@ -139,7 +137,7 @@ class ServerProxy extends CommonProxy {
 	}
 	
 	override def getChatChannel(character: Character):String = {
-	  val sql = "SELECT channel FROM CharacterChat WHERE uuid='" + character.uuid.toString() + "' AND cardName='" + character.cardName + "'"
+	  val sql = "SELECT channel FROM CharacterChat WHERE uuid='" + character.uuid.toString() + "' AND name='" + character.name + "'"
 	  
 	  var channel = "t"
 	  

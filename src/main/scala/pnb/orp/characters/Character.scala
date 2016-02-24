@@ -9,8 +9,7 @@ import pnb.orp.proxy.CommonProxy
 
 class Character(protected val proxy: CommonProxy,
     val uuid: UUID,
-    val cardName: String,
-    val name: String = "Jane Doe",
+    val name: String,
     val age: Int = -1,
     val race: String = "Human",
     val subrace: String = "N/A",
