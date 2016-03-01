@@ -1,11 +1,11 @@
-package pnb.orp.characters
+package loa.orp.characters
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import pnb.orp.proxy.CommonProxy
+import loa.orp.proxy.CommonProxy
 
 class Character(protected val proxy: CommonProxy,
     val uuid: UUID,

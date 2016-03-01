@@ -1,7 +1,11 @@
 /**
+ * OpenRP Core
+ * Character Card and Chat mod
+ * @author Emily Marriott
+ * 
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Project New Beginning
+ * Copyright (c) 2015 Legends of Avariel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +25,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pnb.orp.proxy
+package loa.orp.proxy
 
 import java.sql.Connection
 import java.sql.ResultSet
@@ -33,7 +37,7 @@ import net.minecraftforge.fml.common.event.
   {FMLInitializationEvent, FMLPostInitializationEvent, 
   FMLPreInitializationEvent, FMLServerStoppingEvent}
 
-import pnb.orp.characters.Character;
+import loa.orp.characters.Character;
 
 /**
  * Things common to both the client and server side get done here.
@@ -57,11 +61,11 @@ class CommonProxy {
   //where the server has to load the character, while 
   //the client requests it from the server.
   
-  def loadCharacter(uuid: UUID, cardName: String = null ):Character = {null}
+  def loadCharacter(uuid: UUID, cardName: String = null ):Option[Character] = {None}
   
-  def loadCharacterAndMakeActive(uuid: UUID, cardName: String):Character = {null}
+  def loadCharacterAndMakeActive(uuid: UUID, cardName: String):Option[Character] = {None}
   
   def saveCharacter(c: Character) = {}
   
-  def getChatChannel(character: Character):String = {null}
+  def getChatChannel(character: Character):String = {"t"}
 }

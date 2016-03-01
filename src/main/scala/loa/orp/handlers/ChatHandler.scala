@@ -1,4 +1,31 @@
-package pnb.orp.handlers
+/**
+ * OpenRP Core
+ * Character Card and Chat mod
+ * @author Emily Marriott
+ * 
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 Legends of Avariel
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package loa.orp.handlers
 
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.AxisAlignedBB
@@ -6,40 +33,39 @@ import net.minecraft.util.IChatComponent
 import net.minecraft.util.ChatComponentText
 import net.minecraftforge.event.ServerChatEvent
 import net.minecraftforge.fml.common.Mod.EventHandler
-import pnb.orp.proxy.CommonProxy
 import net.minecraft.entity.player.EntityPlayerMP
-import pnb.orp.util.ChatStyle
 import net.minecraft.util.EnumChatFormatting
+
+import loa.orp.proxy.CommonProxy
+import loa.orp.util.ChatStyle
 
 class ChatHandler(protected val proxy: CommonProxy) {
   
   @EventHandler
   def onServerChatEvent(e: ServerChatEvent) = {
-    //Check if the event is a message being sent
-    val message = Option(e.message) //Wrap the possible java null in an Option
-    if ( message != None ) {
+    //Get the player who sent the message.
+    //Get the active character. 
+    val character = proxy.loadCharacter(e.player.getUniqueID)
+    if ( character != None ) {
       //Stop the event
       e.setCanceled(true)
-  		//Get the player who sent the message.
-      //Get the active character. 
       //Look up current channel the active character is in
-      val channel = proxy.getChatChannel(proxy.loadCharacter(e.player.getUniqueID))
-      val character = proxy.loadCharacter(e.player.getUniqueID)
+      val channel = proxy.getChatChannel(character.get)
       //Send the message on that channel.
       channel match {
         case "t" => sendRangedMessageFromPlayer(e, 24, 
                       new ChatStyle(List(EnumChatFormatting.GREEN, EnumChatFormatting.ITALIC), 
-                      character.name,
+                      character.get.name,
                       separator = " ",
                       quote = Some(List(EnumChatFormatting.WHITE))))//send message on talk channel
         case "s" => sendRangedMessageFromPlayer(e, 48,
                       new ChatStyle(List(EnumChatFormatting.RED, EnumChatFormatting.ITALIC), 
-                      character.name,
+                      character.get.name,
                       separator = " shouts ",
                       quote = Some(List(EnumChatFormatting.WHITE))))//send message on shout channel
         case "w" => sendRangedMessageFromPlayer(e, 6,
                       new ChatStyle(List(EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC), 
-                      character.name,
+                      character.get.name,
                       separator = " whispers ",
                       quote = Some(List(EnumChatFormatting.WHITE))))//send message on whisper channel
         case "o" => //send message on ooc channel

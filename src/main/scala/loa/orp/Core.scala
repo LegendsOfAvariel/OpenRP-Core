@@ -5,7 +5,7 @@
  * 
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Project New Beginning
+ * Copyright (c) 2015 Legends of Avariel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pnb.orp
+package loa.orp
 
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.common.event.
   {FMLInitializationEvent, FMLPostInitializationEvent, 
   FMLPreInitializationEvent, FMLServerStoppingEvent}
 
-import pnb.orp.proxy.CommonProxy
+import loa.orp.proxy.CommonProxy
 
 @Mod(
 	modid = "orpcore",
@@ -49,7 +49,7 @@ object Core {
 		clientSide = "pnb.orp.proxy.ClientProxy",
 		serverSide = "pnb.orp.proxy.ServerProxy"
 	)
-	var proxy: CommonProxy = null
+	var proxy: CommonProxy = null //Null because it must be initialized to something, but Forge will inject the proxy
 	
 	/**
 	 * Pre-initialization Event

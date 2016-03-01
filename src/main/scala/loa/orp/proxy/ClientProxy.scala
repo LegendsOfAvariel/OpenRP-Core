@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pnb.orp.proxy
+package loa.orp.proxy
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import pnb.orp.characters.Character;
+import loa.orp.characters.Character;
 
 class ClientProxy extends CommonProxy {
   
