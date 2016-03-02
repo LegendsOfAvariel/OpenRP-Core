@@ -1,6 +1,6 @@
 /**
  * OpenRP Core
- * Character Card and Chat mod
+ * Character Sheet and Chat mod
  * @author Emily Marriott
  * 
  * The MIT License (MIT)
@@ -27,19 +27,19 @@
  */
 package loa.orp.proxy
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.UUID;
-
+import java.sql.Connection
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.util.UUID
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.event.
   {FMLInitializationEvent, FMLPostInitializationEvent, 
-  FMLPreInitializationEvent, FMLServerStoppingEvent}
-
+  FMLPreInitializationEvent, FMLServerStoppingEvent,
+  FMLServerStartingEvent}
 import loa.orp.characters.Character
 import loa.orp.handlers.ChatHandler
+import loa.orp.commands.CharacterCommand
 
 class ServerProxy extends CommonProxy {
   

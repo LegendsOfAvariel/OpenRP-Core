@@ -1,6 +1,6 @@
 /**
  * OpenRP Core
- * Character Card and Chat mod
+ * Character Sheet and Chat mod
  * @author Emily Marriott
  * 
  * The MIT License (MIT)
@@ -35,9 +35,11 @@ import java.util.UUID
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.fml.common.event.
   {FMLInitializationEvent, FMLPostInitializationEvent, 
-  FMLPreInitializationEvent, FMLServerStoppingEvent}
+  FMLPreInitializationEvent, FMLServerStoppingEvent,
+  FMLServerStartingEvent}
 
-import loa.orp.characters.Character;
+import loa.orp.characters.Character
+import loa.orp.commands.CharacterCommand
 
 /**
  * Things common to both the client and server side get done here.
@@ -57,6 +59,10 @@ class CommonProxy {
   
   def serverStopping(e: FMLServerStoppingEvent) = {}
   
+  def serverLoad(e: FMLServerStartingEvent) = {
+    e.registerServerCommand(new CharacterCommand)
+  }
+  
   //A bunch of these differ between client and server,
   //where the server has to load the character, while 
   //the client requests it from the server.
@@ -68,4 +74,5 @@ class CommonProxy {
   def saveCharacter(c: Character) = {}
   
   def getChatChannel(character: Character):String = {"t"}
+  
 }

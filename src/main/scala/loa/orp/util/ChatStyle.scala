@@ -1,6 +1,6 @@
 /**
  * OpenRP Core
- * Character Card and Chat mod
+ * Character Sheet and Chat mod
  * @author Emily Marriott
  * 
  * The MIT License (MIT)

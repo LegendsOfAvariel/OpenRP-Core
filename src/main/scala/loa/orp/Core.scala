@@ -1,6 +1,6 @@
 /**
  * OpenRP Core
- * Character Card and Chat mod
+ * Character Sheet and Chat mod
  * @author Emily Marriott
  * 
  * The MIT License (MIT)
@@ -33,8 +33,8 @@ import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.SidedProxy
 import net.minecraftforge.fml.common.event.
   {FMLInitializationEvent, FMLPostInitializationEvent, 
-  FMLPreInitializationEvent, FMLServerStoppingEvent}
-
+  FMLPreInitializationEvent, FMLServerStoppingEvent,
+  FMLServerStartingEvent}
 import loa.orp.proxy.CommonProxy
 
 @Mod(
@@ -46,8 +46,8 @@ import loa.orp.proxy.CommonProxy
 object Core {
   
   @SidedProxy (
-		clientSide = "pnb.orp.proxy.ClientProxy",
-		serverSide = "pnb.orp.proxy.ServerProxy"
+		clientSide = "loa.orp.proxy.ClientProxy",
+		serverSide = "loa.orp.proxy.ServerProxy"
 	)
 	var proxy: CommonProxy = null //Null because it must be initialized to something, but Forge will inject the proxy
 	
@@ -58,10 +58,7 @@ object Core {
 	 * @param event
 	 */
 	@EventHandler
-  def preInit(e: FMLPreInitializationEvent) = {
-    //Proxy handles events. Some things should only be done client or server side.
-		proxy.preInit(e)
-	}
+  def preInit(e: FMLPreInitializationEvent) = proxy.preInit(e)
 
   /**
 	 * Initialization Event
@@ -69,17 +66,14 @@ object Core {
 	 * @param event
 	 */
 	@EventHandler
-  def init(e: FMLInitializationEvent) = {
-		proxy.init(e)
-  }
+  def init(e: FMLInitializationEvent) = proxy.init(e)
 
   @EventHandler
-  def postInit(e: FMLPostInitializationEvent) = {
-    proxy.postInit(e)
-  }
+  def postInit(e: FMLPostInitializationEvent) = proxy.postInit(e)
   
   @EventHandler
-	def serverStopping(e: FMLServerStoppingEvent) = {
-		proxy.serverStopping(e)
-	}
+	def serverStopping(e: FMLServerStoppingEvent) = proxy.serverStopping(e)
+  
+  @EventHandler
+  def serverLoad(e: FMLServerStartingEvent) = proxy.serverLoad(e)
 }

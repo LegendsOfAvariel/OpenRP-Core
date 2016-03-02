@@ -25,30 +25,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package loa.orp.characters
+package loa.orp.gui
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.UUID;
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.util.ResourceLocation
 
-import loa.orp.proxy.CommonProxy
-
-class Character(protected val proxy: CommonProxy,
-    val uuid: UUID,
-    val name: String,
-    val age: Int = -1,
-    val race: String = "Human",
-    val subrace: String = "N/A",
-    val bio: String = "",
-    val active: Boolean = false) {
+class CharacterCreationScreen extends GuiScreen {
   
-  def save = {
-    proxy.saveCharacter(this)
+  private val guiWidth = 175
+  private val guiHeight = 165
+  
+  override def drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) = {
+    val guiX = (width - guiWidth) / 2
+    val guiY = (height - guiHeight) / 2
+    drawDefaultBackground
+    mc.renderEngine.bindTexture(new ResourceLocation("orpcore", "textures/gui/charcreate.png"))
+    this.drawTexturedModalRect(guiX, guiY, 0, 0, guiWidth, guiHeight)
+    
+    //fontRendererObj.drawString("Screen Width: " + width + ", Screen Height: " + height, 256, 256, 0xFF0000);
+    
+    super.drawScreen(mouseX, mouseY, partialTicks)
   }
-  
-  def printCard(page: Int) = {
-		// TODO Auto-generated method stub
-	}
   
 }
