@@ -27,14 +27,12 @@
  */
 package loa.orp.handlers
 
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.AxisAlignedBB
-import net.minecraft.util.IChatComponent
-import net.minecraft.util.ChatComponentText
+import net.minecraft.util.math.AxisAlignedBB
+import net.minecraft.util.text.TextComponentString
 import net.minecraftforge.event.ServerChatEvent
 import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.util.EnumChatFormatting
+import net.minecraft.util.text.TextFormatting
 
 import loa.orp.proxy.CommonProxy
 import loa.orp.util.ChatStyle
@@ -45,7 +43,7 @@ class ChatHandler(protected val proxy: CommonProxy) {
   def onServerChatEvent(e: ServerChatEvent) = {
     //Get the player who sent the message.
     //Get the active character. 
-    val character = proxy.loadCharacter(e.player.getUniqueID)
+    val character = proxy.loadCharacter(e.getPlayer.getUniqueID)
     if ( character != None ) {
       //Stop the event
       e.setCanceled(true)
@@ -54,24 +52,24 @@ class ChatHandler(protected val proxy: CommonProxy) {
       //Send the message on that channel.
       channel match {
         case "t" => sendRangedMessageFromPlayer(e, 24, 
-                      new ChatStyle(List(EnumChatFormatting.GREEN, EnumChatFormatting.ITALIC), 
+                      new ChatStyle(List(TextFormatting.GREEN, TextFormatting.ITALIC),
                       character.get.name,
                       separator = " ",
-                      quote = Some(List(EnumChatFormatting.WHITE))))//send message on talk channel
+                      quote = Some(List(TextFormatting.WHITE))))//send message on talk channel
         case "s" => sendRangedMessageFromPlayer(e, 48,
-                      new ChatStyle(List(EnumChatFormatting.RED, EnumChatFormatting.ITALIC), 
+                      new ChatStyle(List(TextFormatting.RED, TextFormatting.ITALIC),
                       character.get.name,
                       separator = " shouts ",
-                      quote = Some(List(EnumChatFormatting.WHITE))))//send message on shout channel
+                      quote = Some(List(TextFormatting.WHITE))))//send message on shout channel
         case "w" => sendRangedMessageFromPlayer(e, 6,
-                      new ChatStyle(List(EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC), 
+                      new ChatStyle(List(TextFormatting.BLUE, TextFormatting.ITALIC),
                       character.get.name,
                       separator = " whispers ",
-                      quote = Some(List(EnumChatFormatting.WHITE))))//send message on whisper channel
+                      quote = Some(List(TextFormatting.WHITE))))//send message on whisper channel
         case "o" => //send message on ooc channel
         case "l" => sendRangedMessageFromPlayer(e, 6,
-                      new ChatStyle(List(EnumChatFormatting.GRAY), 
-                      e.player.getName,
+                      new ChatStyle(List(TextFormatting.GRAY),
+                      e.getPlayer.getName,
                       separator = ": "))//send message on looc channel
         case "h" => //send message on help channel
         case "g" => //send message on gm channel
@@ -82,12 +80,12 @@ class ChatHandler(protected val proxy: CommonProxy) {
   
   private def sendRangedMessageFromPlayer(e: ServerChatEvent, range:Int, style: ChatStyle) = {
     //Get player's position and load their active character
-    val playerPos = e.player.getPosition
+    val playerPos = e.getPlayer.getPosition
     //Style message
-    val message = style.apply(e.message)
+    val message = style.apply(e.getMessage)
     //Find all players within talk range
-    val playersInRange = e.player.getServerForPlayer.getEntitiesWithinAABB(classOf[EntityPlayerMP], 
-      AxisAlignedBB.fromBounds(
+    val playersInRange = e.getPlayer.getServerForPlayer.getEntitiesWithinAABB(classOf[EntityPlayerMP],
+      new AxisAlignedBB (
           playerPos.getX-range, 
           playerPos.getY-range, 
           playerPos.getZ-range,
@@ -97,7 +95,7 @@ class ChatHandler(protected val proxy: CommonProxy) {
     //Send message as character name to all players within talk range
     val iterator = playersInRange.iterator
     while (iterator.hasNext) {
-      iterator.next.asInstanceOf[EntityPlayerMP].addChatMessage(new ChatComponentText(message))
+      iterator.next.addChatMessage(new TextComponentString(message))
     }
   }
 }

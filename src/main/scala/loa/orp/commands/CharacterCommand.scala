@@ -28,21 +28,23 @@
 package loa.orp.commands
 
 import java.util.ArrayList
+import java.util.LinkedList
 
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
-import net.minecraft.util.BlockPos
+import net.minecraft.util.math.BlockPos
 import net.minecraft.client.Minecraft
-
 import loa.orp.gui.CharacterCreationScreen
+import net.minecraft.server.MinecraftServer
+import net.minecraft.util.text.TextComponentString
 
 class CharacterCommand extends ICommand {
-  
+
   private val aliases: java.util.List[String] = new ArrayList[String]
   aliases.add("character")
   aliases.add("char")
   aliases.add("c")
-  
+
   override def getCommandName:String = {
     "sample"
   }
@@ -60,24 +62,24 @@ class CharacterCommand extends ICommand {
     |delete   Deletes the named character
     |list     List existing characters
     |view     Views the named character sheet
-    """".stripMargin
+    """.stripMargin
   }
 
   override def getCommandAliases:java.util.List[String] = {
     aliases
   }
 
-  override def processCommand(icommandsender: ICommandSender, astring: Array[String]) = astring(0) match {
-    case "help" => getCommandUsage(icommandsender)
+  override def execute(server: MinecraftServer, icommandsender: ICommandSender, astring: Array[String]) = astring(0) match {
+    case "help" => icommandsender.addChatMessage(new TextComponentString(getCommandUsage(icommandsender)))
     case "create" => Minecraft.getMinecraft.displayGuiScreen(new CharacterCreationScreen)
   }
 
-  override def canCommandSenderUseCommand(icommandsender: ICommandSender):Boolean = {
+  override def checkPermission(server: MinecraftServer, icommandsender: ICommandSender):Boolean = {
     true
   }
 
-  override def addTabCompletionOptions(icommandsender: ICommandSender, astring: Array[String], pos: BlockPos):java.util.List[String] = {
-    null
+  override def getTabCompletionOptions(server: MinecraftServer, icommandsender: ICommandSender, astring: Array[String], pos: BlockPos):java.util.List[String] = {
+    new LinkedList[String]
   }
 
   override def isUsernameIndex(astring: Array[String], i: Int): Boolean = {
@@ -85,6 +87,6 @@ class CharacterCommand extends ICommand {
   }
 
   override def compareTo(o :ICommand):Int = {
-    0
+    if (o.isInstanceOf[CharacterCommand]) 1 else 0
   }
 }

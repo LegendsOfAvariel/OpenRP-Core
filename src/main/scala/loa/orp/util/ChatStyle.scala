@@ -27,13 +27,13 @@
  */
 package loa.orp.util
 
-import net.minecraft.util.EnumChatFormatting
+import net.minecraft.util.text.TextFormatting
 
-class ChatStyle(protected val message: List[EnumChatFormatting],
+class ChatStyle(protected val message: List[TextFormatting],
     protected val senderName: String,
-    protected val quote: Option[List[EnumChatFormatting]] = None, 
+    protected val quote: Option[List[TextFormatting]] = None,
     protected val separator: String = ": " , 
-    protected val name: Option[List[EnumChatFormatting]] = None,
+    protected val name: Option[List[TextFormatting]] = None,
     protected val prefix: String = "",
     protected val suffix: String = "",
     protected val channelTag: String = ""
@@ -44,14 +44,14 @@ class ChatStyle(protected val message: List[EnumChatFormatting],
   protected val nameStyle: String = name.getOrElse(List("")).mkString
   
   def apply(message: String):String = {
-    var output = new StringBuilder(senderName.length + separator.length + message.length + channelTag.length + prefix.length + suffix.length + 20)
+    val output = new StringBuilder(senderName.length + separator.length + message.length + channelTag.length + prefix.length + suffix.length + 20)
     
     //Remove prefix and suffix from the message if they are in there
     
     //Style the name and separator
     if ( nameStyle != "" ) {
       //Style the name and separator with the name style
-      output.append(nameStyle + channelTag +  senderName + separator + EnumChatFormatting.RESET.toString + messageStyle + prefix)
+      output.append(nameStyle + channelTag +  senderName + separator + TextFormatting.RESET.toString + messageStyle + prefix)
     }
     else {
       //Style the name and separator with the message style
@@ -66,12 +66,13 @@ class ChatStyle(protected val message: List[EnumChatFormatting],
       message.foreach { char => 
         //If we've found a quote mark
         if (char == '"' ) {
+          inQuote = !inQuote
           //If we're within a quote, end the quote formatting
           if (inQuote)
-            output.append(char.toString + EnumChatFormatting.RESET.toString + messageStyle)
+            output.append(char.toString + TextFormatting.RESET.toString + messageStyle)
           //Else apply the quote formatting
           else 
-            output.append(EnumChatFormatting.RESET.toString + quoteStyle + char.toString)
+            output.append(TextFormatting.RESET.toString + quoteStyle + char.toString)
         }
         //Otherwise just append the message
         else

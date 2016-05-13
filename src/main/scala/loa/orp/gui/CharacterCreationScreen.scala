@@ -31,20 +31,24 @@ import net.minecraft.client.gui.GuiScreen
 import net.minecraft.util.ResourceLocation
 
 class CharacterCreationScreen extends GuiScreen {
-  
-  private val guiWidth = 175
-  private val guiHeight = 165
-  
-  override def drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) = {
-    val guiX = (width - guiWidth) / 2
-    val guiY = (height - guiHeight) / 2
-    drawDefaultBackground
-    mc.renderEngine.bindTexture(new ResourceLocation("orpcore", "textures/gui/charcreate.png"))
-    this.drawTexturedModalRect(guiX, guiY, 0, 0, guiWidth, guiHeight)
-    
-    //fontRendererObj.drawString("Screen Width: " + width + ", Screen Height: " + height, 256, 256, 0xFF0000);
-    
-    super.drawScreen(mouseX, mouseY, partialTicks)
-  }
-  
+
+	private val guiWidth = 175
+	private val guiHeight = 165
+
+	private val guiBackground = new ResourceLocation("orpcore", "textures/gui/charcreate.png")
+
+	override def drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) = {
+		val guiX = (width - guiWidth) / 2
+		val guiY = (height - guiHeight) / 2
+
+		drawDefaultBackground
+		mc.renderEngine.bindTexture(guiBackground)
+		this.drawTexturedModalRect(guiX, guiY, 0, 0, guiWidth, guiHeight)
+
+		//fontRendererObj.drawString("Screen Width: " + width + ", Screen Height: " + height, 256, 256, 0xFF0000)
+
+		super.drawScreen(mouseX, mouseY, partialTicks)
+
+	}
+
 }
